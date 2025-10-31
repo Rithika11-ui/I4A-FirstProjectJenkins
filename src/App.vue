@@ -1,23 +1,39 @@
-<script setup lang="ts">
-import { RouterView } from 'vue-router'
+<script lang="ts">
+import { defineComponent } from 'vue'
+import Btn from './components/button.vue'
+import ItemCard from './components/ItemCard.vue'
+// import Promotion from './components/promotion.vue'
+import PromotionCard from './components/promotionCard.vue'
 
+export default defineComponent({
+  name: 'App',
+  components: {
+    Btn,
+    ItemCard,
+    PromotionCard,
+  }
+})
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
-      <!-- <HelloWorld msg="You did it!" /> -->
 
+      <ItemCard class="flex gap-10" />
       <nav>
         <!-- <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink> -->
       </nav>
+      
+
+      <PromotionCard class="flex gap-5"/>
+
+
     </div>
   </header>
 
-  <RouterView />
+  <!-- <RouterView /> -->
 </template>
 
 <style scoped>
