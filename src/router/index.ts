@@ -9,11 +9,11 @@ const router = createRouter({
     //   name: 'home',
     //   component: { template: '<h1>Welcome to Home Page</h1>' }
     // },
-    {
-      path: '/about',
-      name: 'about',
-      component: { template: '<h1>Welcome to Home Page</h1>'}
-    },
+    // {
+    //   path: '/about',
+    //   name: 'about',
+    //   component: { template: '<h1>Welcome to Home Page</h1>'}
+    // },
 
   ],
 })
