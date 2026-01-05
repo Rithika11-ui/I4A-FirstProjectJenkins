@@ -1,0 +1,445 @@
+phe@DESKTOP-I228BDP:~$ mkdir class_activity3
+phe@DESKTOP-I228BDP:~$ cd class_activity3
+phe@DESKTOP-I228BDP:~/class_activity3$ mkdir MQ-IPC SHM-IPC
+phe@DESKTOP-I228BDP:~/class_activity3$ tree
+.
+├── MQ-IPC
+└── SHM-IPC
+
+3 directories, 0 files
+phe@DESKTOP-I228BDP:~/class_activity3$ cd SHM-IPC
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ nano shm-producer.c
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ tree
+.
+└── shm-producer.c
+
+1 directory, 1 file
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ nano shm-consumer.c
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ gcc -o shm-producer shm-producer.c -lrt
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ gcc -o shm-producer shm-consumer.c -lrt
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ tree
+.
+├── shm-consumer.c
+├── shm-producer
+└── shm-producer.c
+
+1 directory, 3 files
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ cd ../
+phe@DESKTOP-I228BDP:~/class_activity3$ tree
+.
+├── MQ-IPC
+└── SHM-IPC
+    ├── shm-consumer.c
+    ├── shm-producer
+    └── shm-producer.c
+
+3 directories, 3 files
+phe@DESKTOP-I228BDP:~/class_activity3$ gcc -o shm-consumer shm-consumer.c -lrt
+cc1: fatal error: shm-consumer.c: No such file or directory
+compilation terminated.
+phe@DESKTOP-I228BDP:~/class_activity3$ cd SHM-IPC
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ gcc -o shm-consumer shm-consumer.c -lrt
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ TREE
+TREE: command not found
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ tree
+.
+├── shm-consumer
+├── shm-consumer.c
+├── shm-producer
+└── shm-producer.c
+
+1 directory, 4 files
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ ./shm-producer
+shm_open: No such file or directory
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ ./shm-producer.c
+-bash: ./shm-producer.c: Permission denied
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ cd ../..
+phe@DESKTOP-I228BDP:~$ tree
+.
+├── class_activity1
+│   ├── copyfilesyscall.c
+│   ├── copyresult.txt
+│   ├── result.txt
+│   ├── syscall1
+│   ├── syscall1.c
+│   └── syscall_commands_history.txt
+├── class_activity2
+│   ├── command_used_forkchild.txt
+│   ├── forkchild
+│   ├── forkchild.c
+│   └── result_forkchild.txt
+└── class_activity3
+    ├── MQ-IPC
+    └── SHM-IPC
+        ├── shm-consumer
+        ├── shm-consumer.c
+        ├── shm-producer
+        └── shm-producer.c
+
+6 directories, 14 files
+phe@DESKTOP-I228BDP:~$ cd ~/class_activity3/SHM-IPC
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ ./shm-producer
+shm_open: No such file or directory
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ cat > shm-producer.c
+cat shm-producer
+^C
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ cat > shm-producer.c << 'EDF'
+> cat > shm-producer.c << 'oDF'
+> ^C
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ cat > shm-producer.c << 'EDF'
+cat > shm-producer.c << 'oDF'
+^C
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ cat > shm-producer.c << 'EOF'
+> ^C
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ nano shm-producer.c
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ nano shm-consumer.c
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ nano shm-producer.c
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ nano shm-consumer.c
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ nano shm-producer.c
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ sudo mkdir -p /dev/shm
+sudo mount -t tmpfs tmpfs /dev/shm
+[sudo] password for phe:
+sudo: a password is required
+[sudo] password for phe:
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ tree
+.
+├── shm-consumer
+├── shm-consumer.c
+├── shm-producer
+└── shm-producer.c
+
+1 directory, 4 files
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ ./shm-producer
+shm_open: No such file or directory
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ sudo mkdir -p /dev/shm
+sudo mount -t tmpfs tmpfs /dev/shm
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ ./shm-producer
+shm_open: No such file or directory
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ ls -la /dev/shm
+mount | grep shm
+total 0
+drwxrwxrwt  2 root root   40 Nov 26 10:08 .
+drwxr-xr-x 15 root root 3860 Nov 26 09:36 ..
+none on /run/shm type tmpfs (rw,nosuid,nodev,noatime)
+none on /dev/shm type tmpfs (rw,nosuid,nodev,noatime)
+tmpfs on /dev/shm type tmpfs (rw,relatime)
+tmpfs on /run/shm type tmpfs (rw,relatime)
+tmpfs on /dev/shm type tmpfs (rw,relatime)
+tmpfs on /run/shm type tmpfs (rw,relatime)
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ nano shm-consumer.c
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ nano shm-producer.c
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ gcc -o shm-producer shm-producer.c -lrt
+gcc -o shm-consumer shm-consumer.c -lrt
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ ./shm-producer
+./shm-consumer > result-shm-ipc.txt
+cat result-shm-ipc.txt
+HelloPisey!
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ tree
+.
+├── result-shm-ipc.txt
+├── shm-consumer
+├── shm-consumer.c
+├── shm-producer
+└── shm-producer.c
+
+1 directory, 5 files
+phe@DESKTOP-I228BDP:~/class_activity3/SHM-IPC$ cd ../
+phe@DESKTOP-I228BDP:~/class_activity3$ tree
+.
+├── MQ-IPC
+└── SHM-IPC
+    ├── result-shm-ipc.txt
+    ├── shm-consumer
+    ├── shm-consumer.c
+    ├── shm-producer
+    └── shm-producer.c
+
+3 directories, 5 files
+phe@DESKTOP-I228BDP:~/class_activity3$ cd MQ-IPC
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ nano common.h
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ nano sender.c
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ nano receiver.c
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ gcc -o sender.c -lrt
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o: in function `_start':
+(.text+0x1b): undefined reference to `main'
+collect2: error: ld returned 1 exit status
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ gcc -o sender sender.c -lrt
+cc1: fatal error: sender.c: No such file or directory
+compilation terminated.
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ tree
+.
+├── common.h
+└── receiver.c
+
+1 directory, 2 files
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ gcc -o sender sender.c -lrt
+cc1: fatal error: sender.c: No such file or directory
+compilation terminated.
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ nano sender.c
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ cat sender.c
+// sender.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <mqueue.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include "common.h"
+
+int main() {
+    mqd_t mq;
+    struct mq_attr attr;
+
+    attr.mq_flags = 0;
+    attr.mq_maxmsg = 10;
+    attr.mq_msgsize = MAX_SIZE;
+    attr.mq_curmsgs = 0;
+
+    mq = mq_open(QUEUE_NAME, O_CREAT | O_WRONLY, 0644, &attr);
+    if (mq == (mqd_t)-1) {
+        perror("mq_open");
+        exit(EXIT_FAILURE);
+    }
+
+    const char *message = "Hello from sender!";
+    if (mq_send(mq, message, strlen(message) + 1, 0) == -1) {
+        perror("mq_send");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("Sender: Message sent.\n");
+
+    mq_close(mq);
+    return 0;
+}
+
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ gcc -o sender sender.c -lrt
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ gcc -o receriver receiver.c -lrt
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ ./sender
+Sender: Message sent.
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ ./receiver > result-mq-ipc.txt
+-bash: ./receiver: No such file or directory
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ ./receiver > result-mq-ipc.txt
+-bash: ./receiver: No such file or directory
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ // sender.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <mqueue.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include "common.h"
+
+int main() {
+    mqd_t mq;
+    struct mq_attr attr;
+
+    attr.mq_flags = 0;
+    attr.mq_maxmsg = 10;
+    attr.mq_msgsize = MAX_SIZE;
+    attr.mq_curmsgs = 0;
+
+    mq = mq_open(QUEUE_NAME, O_CREAT | O_WRONLY, 0644, &attr);
+    if (mq == (mqd_t)-1) {
+        perror("mq_open");
+        ^Cit(EXIT_FAILURE);
+    }
+
+    const char *message = "Hello from sender!";
+    if (mq_send(mq, message, strlen(message) + 1, 0) == -1) {
+        perror("mq_send");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("Sender: Message sent.\n");
+
+    mq_close(mq);
+    return 0;
+}
+
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ ./receiver > result-mq-ipc.txt
+-bash: ./receiver: No such file or directory
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ gcc -o sender sender.c -lrt
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ gcc -o receiver.c -lrt
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o: in function `_start':
+(.text+0x1b): undefined reference to `main'
+collect2: error: ld returned 1 exit status
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ gcc -o receiver receiver.c -lrt
+cc1: fatal error: receiver.c: No such file or directory
+compilation terminated.
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ gcc -o sender sender.c -lrt
+\phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ gcc -o receiver receiver.c -lrt
+cc1: fatal error: receiver.c: No such file or directory
+compilation terminated.
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ ls -ls
+total 40
+ 4 -rw-r--r-- 1 phe phe   114 Nov 26 10:13 common.h
+16 -rwxr-xr-x 1 phe phe 16328 Nov 26 10:17 receriver
+ 0 -rw-r--r-- 1 phe phe     0 Nov 26 10:19 result-mq-ipc.txt
+16 -rwxr-xr-x 1 phe phe 16272 Nov 26 10:20 sender
+ 4 -rw-r--r-- 1 phe phe   711 Nov 26 10:16 sender.c
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ ls -la
+total 48
+drwxr-xr-x 2 phe phe  4096 Nov 26 10:20 .
+drwxr-xr-x 4 phe phe  4096 Nov 26 09:46 ..
+-rw-r--r-- 1 phe phe   114 Nov 26 10:13 common.h
+-rwxr-xr-x 1 phe phe 16328 Nov 26 10:17 receriver
+-rw-r--r-- 1 phe phe     0 Nov 26 10:19 result-mq-ipc.txt
+-rwxr-xr-x 1 phe phe 16272 Nov 26 10:20 sender
+-rw-r--r-- 1 phe phe   711 Nov 26 10:16 sender.c
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ nano receiver.c
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ gcc -o rceiver receiver.c -lrt
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ ./sender
+Sender: Message sent.
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ ./receiver > result-mq-ipc.txt
+-bash: ./receiver: No such file or directory
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ gcc -o receiver receiver.c -lrt
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ ./sender
+./receiver > result-mq-ipc.txt
+cat result-mq-ipc.txt
+Sender: Message sent.
+Receiver: Message received: Hello from sender!
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ ls -la
+total 88
+drwxr-xr-x 2 phe phe  4096 Nov 26 10:22 .
+drwxr-xr-x 4 phe phe  4096 Nov 26 09:46 ..
+-rw-r--r-- 1 phe phe   114 Nov 26 10:13 common.h
+-rwxr-xr-x 1 phe phe 16328 Nov 26 10:21 rceiver
+-rwxr-xr-x 1 phe phe 16328 Nov 26 10:22 receiver
+-rw-r--r-- 1 phe phe   641 Nov 26 10:21 receiver.c
+-rwxr-xr-x 1 phe phe 16328 Nov 26 10:17 receriver
+-rw-r--r-- 1 phe phe    47 Nov 26 10:22 result-mq-ipc.txt
+-rwxr-xr-x 1 phe phe 16272 Nov 26 10:20 sender
+-rw-r--r-- 1 phe phe   711 Nov 26 10:16 sender.c
+phe@DESKTOP-I228BDP:~/class_activity3/MQ-IPC$ cd ../
+phe@DESKTOP-I228BDP:~/class_activity3$ tree
+.
+├── MQ-IPC
+│   ├── common.h
+│   ├── rceiver
+│   ├── receiver
+│   ├── receiver.c
+│   ├── receriver
+│   ├── result-mq-ipc.txt
+│   ├── sender
+│   └── sender.c
+└── SHM-IPC
+    ├── result-shm-ipc.txt
+    ├── shm-consumer
+    ├── shm-consumer.c
+    ├── shm-producer
+    └── shm-producer.c
+
+3 directories, 13 files
+phe@DESKTOP-I228BDP:~/class_activity3$ git init
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: is subject to change. To configure the initial branch name to use in all
+hint: of your new repositories, which will suppress this warning, call:
+hint:
+hint:   git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint:   git branch -m <name>
+Initialized empty Git repository in /home/phe/class_activity3/.git/
+phe@DESKTOP-I228BDP:~/class_activity3$ git remote add orgin https://github.com/Ting11-ui/os.git
+phe@DESKTOP-I228BDP:~/class_activity3$ git checkout -b class_activity3
+Switched to a new branch 'class_activity3'
+phe@DESKTOP-I228BDP:~/class_activity3$ git add .
+phe@DESKTOP-I228BDP:~/class_activity3$ git commit -m "Class_activity3 IPC LAB: SHM AND MQ"
+Author identity unknown
+
+*** Please tell me who you are.
+
+Run
+
+  git config --global user.email "you@example.com"
+  git config --global user.name "Your Name"
+
+to set your account's default identity.
+Omit --global to set the identity only in this repository.
+
+fatal: empty ident name (for <phe@DESKTOP-I228BDP.localdomain>) not allowed
+phe@DESKTOP-I228BDP:~/class_activity3$ git config --global user.email "pherithika@gmail.com"
+phe@DESKTOP-I228BDP:~/class_activity3$ git config --global user.name "Ting11-ui"
+phe@DESKTOP-I228BDP:~/class_activity3$ git push -u origin class_activity3
+error: src refspec class_activity3 does not match any
+error: failed to push some refs to 'origin'
+phe@DESKTOP-I228BDP:~/class_activity3$ git checkout -b class_activity3
+Switched to a new branch 'class_activity3'
+phe@DESKTOP-I228BDP:~/class_activity3$ git status
+On branch class_activity3
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+        new file:   MQ-IPC/common.h
+        new file:   MQ-IPC/rceiver
+        new file:   MQ-IPC/receiver
+        new file:   MQ-IPC/receiver.c
+        new file:   MQ-IPC/receriver
+        new file:   MQ-IPC/result-mq-ipc.txt
+        new file:   MQ-IPC/sender
+        new file:   MQ-IPC/sender.c
+        new file:   SHM-IPC/result-shm-ipc.txt
+        new file:   SHM-IPC/shm-consumer
+        new file:   SHM-IPC/shm-consumer.c
+        new file:   SHM-IPC/shm-producer
+        new file:   SHM-IPC/shm-producer.c
+
+phe@DESKTOP-I228BDP:~/class_activity3$ git add .
+phe@DESKTOP-I228BDP:~/class_activity3$ git commit -m "Class_activity3 IPC LAB: SHM AND MQ"
+[class_activity3 (root-commit) a89101e] Class_activity3 IPC LAB: SHM AND MQ
+ 13 files changed, 165 insertions(+)
+ create mode 100644 MQ-IPC/common.h
+ create mode 100755 MQ-IPC/rceiver
+ create mode 100755 MQ-IPC/receiver
+ create mode 100644 MQ-IPC/receiver.c
+ create mode 100755 MQ-IPC/receriver
+ create mode 100644 MQ-IPC/result-mq-ipc.txt
+ create mode 100755 MQ-IPC/sender
+ create mode 100644 MQ-IPC/sender.c
+ create mode 100644 SHM-IPC/result-shm-ipc.txt
+ create mode 100755 SHM-IPC/shm-consumer
+ create mode 100644 SHM-IPC/shm-consumer.c
+ create mode 100755 SHM-IPC/shm-producer
+ create mode 100644 SHM-IPC/shm-producer.c
+phe@DESKTOP-I228BDP:~/class_activity3$ git push -u origin class_activity3
+fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+phe@DESKTOP-I228BDP:~/class_activity3$ git remote add origin https://github.com/Ting11-ui/os.git
+phe@DESKTOP-I228BDP:~/class_activity3$ git push -u origin class_activity3
+Username for 'https://github.com': Ting11-ui
+Password for 'https://Ting11-ui@github.com':
+remote: Invalid username or token. Password authentication is not supported for Git operations.
+fatal: Authentication failed for 'https://github.com/Ting11-ui/os.git/'
+phe@DESKTOP-I228BDP:~/class_activity3$ git pushh -u origin class_activity3
+git: 'pushh' is not a git command. See 'git --help'.
+
+The most similar command is
+        push
+phe@DESKTOP-I228BDP:~/class_activity3$ git push -u origin class_activity3
+Username for 'https://github.com': Ting11-ui
+Password for 'https://Ting11-ui@github.com':
+remote: invalid credentials
+fatal: Authentication failed for 'https://github.com/Ting11-ui/os.git/'
+phe@DESKTOP-I228BDP:~/class_activity3$ git push -u origin class_activity3
+Username for 'https://github.com': Ting11-ui
+Password for 'https://Ting11-ui@github.com':
+Enumerating objects: 15, done.
+Counting objects: 100% (15/15), done.
+Delta compression using up to 16 threads
+Compressing objects: 100% (13/13), done.
+Writing objects: 100% (15/15), 9.04 KiB | 4.52 MiB/s, done.
+Total 15 (delta 3), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (3/3), done.
+To https://github.com/Ting11-ui/os.git
+ * [new branch]      class_activity3 -> class_activity3
+branch 'class_activity3' set up to track 'origin/class_activity3'.
+phe@DESKTOP-I228BDP:~/class_activity3$
