@@ -1,0 +1,97 @@
+---
+- name: Deploy Laravel application
+  hosts: production
+  become: yes
+  vars:
+    deploy_host: "178.128.93.188"
+    deploy_user: "PHE-RITHIKA"
+    app_dir: "/var/www/PHE-RITHIKA"
+    git_repo: "https://github.com/Rithika11-ui/I4A-FirstProjectJenkins.git"
+    git_branch: "TP03-2026"
+
+  tasks:
+    - name: Ensure app directory exists
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: "{{ deploy_user }}"
+        group: www-data
+        mode: '0755'
+
+    - name: Pull latest code from Git
+      git:
+        repo: "{{ git_repo }}"
+        dest: "{{ app_dir }}"
+        version: "{{ git_branch }}"
+        force: yes
+      become_user: "{{ deploy_user }}"
+
+    - name: Install PHP dependencies
+      command: composer install --no-interaction --prefer-dist --optimize-autoloader
+      args:
+        chdir: "{{ app_dir }}"
+      become_user: "{{ deploy_user }}"
+
+    - name: Copy .env if not present
+      command: cp .env.example .env
+      args:
+        chdir: "{{ app_dir }}"
+        creates: "{{ app_dir }}/.env"
+      become_user: "{{ deploy_user }}"
+
+    - name: Generate application key
+      command: php artisan key:generate
+      args:
+        chdir: "{{ app_dir }}"
+      become_user: "{{ deploy_user }}"
+
+    - name: Install Node.js dependencies
+      command: npm install
+      args:
+        chdir: "{{ app_dir }}"
+      become_user: "{{ deploy_user }}"
+
+    - name: Build frontend assets
+      command: npm run build
+      args:
+        chdir: "{{ app_dir }}"
+      become_user: "{{ deploy_user }}"
+
+    - name: Run database migrations
+      command: php artisan migrate --force
+      args:
+        chdir: "{{ app_dir }}"
+      become_user: "{{ deploy_user }}"
+
+    - name: Clear and cache config
+      shell: |
+        php artisan config:clear
+        php artisan config:cache
+        php artisan route:cache
+        php artisan view:cache
+      args:
+        chdir: "{{ app_dir }}"
+      become_user: "{{ deploy_user }}"
+
+    - name: Set correct file permissions
+      file:
+        path: "{{ app_dir }}/{{ item }}"
+        owner: "{{ deploy_user }}"
+        group: www-data
+        mode: '0775'
+        recurse: yes
+      loop:
+        - storage
+        - bootstrap/cache
+
+    - name: Restart PHP-FPM
+      service:
+        name: php8.2-fpm
+        state: restarted
+      ignore_errors: yes
+
+    - name: Reload Nginx
+      service:
+        name: nginx
+        state: reloaded
+      ignore_errors: yes
