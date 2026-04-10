@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'LaravelAgent' }
 
     environment {
         DEPLOY_HOST     = '178.128.93.188'
