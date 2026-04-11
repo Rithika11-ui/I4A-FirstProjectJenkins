@@ -79,33 +79,23 @@ pipeline {
     post {
         success {
             echo 'Deployment successful!'
-            sh """
-                curl -s -X POST https://api.telegram.org/bot\${TELEGRAM_BOT_TOKEN}/sendMessage \
-                    -d chat_id=\${TELEGRAM_CHAT_ID} \
-                    -d text="✅ Build SUCCESS: \${JOB_NAME} #\${BUILD_NUMBER} deployed to ${DEPLOY_HOST}"
-            """
+            mail to: 'pherithika@gmail.com',
+                subject: "✅ Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Good news! Build #${env.BUILD_NUMBER} was deployed successfully.\n\nURL: ${env.BUILD_URL}"
+            sh """curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
+                -d chat_id=${TELEGRAM_CHAT_ID} \
+                -d parse_mode=HTML \
+                -d text=✅ <b>Build SUCCESS</b>%0AJob: ${env.JOB_NAME}%0ABuild: #${env.BUILD_NUMBER}%0AURL: ${env.BUILD_URL}"""
         }
-
         failure {
             echo 'Build or deployment FAILED!'
-
             mail to: 'pherithika@gmail.com',
-                 subject: "❌ Jenkins Build FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                 body: """
-                    Build failed for job: ${env.JOB_NAME}
-                    Build number: ${env.BUILD_NUMBER}
-                    Branch: ${env.GIT_BRANCH}
-                    Build URL: ${env.BUILD_URL}
-
-                    Check the console output at: ${env.BUILD_URL}console
-                 """
-
-            sh """
-                curl -s -X POST https://api.telegram.org/bot\${TELEGRAM_BOT_TOKEN}/sendMessage \
-                    -d chat_id=\${TELEGRAM_CHAT_ID} \
-                    -d parse_mode=HTML \
-                    -d text="❌ <b>Build FAILED</b>%0AJob: ${env.JOB_NAME}%0ABuild: #${env.BUILD_NUMBER}%0AURL: ${env.BUILD_URL}"
-            """
+                subject: "❌ Build FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Build #${env.BUILD_NUMBER} failed.\n\nURL: ${env.BUILD_URL}"
+            sh """curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
+                -d chat_id=${TELEGRAM_CHAT_ID} \
+                -d parse_mode=HTML \
+                -d text=❌ <b>Build FAILED</b>%0AJob: ${env.JOB_NAME}%0ABuild: #${env.BUILD_NUMBER}%0AURL: ${env.BUILD_URL}"""
         }
     }
 }
