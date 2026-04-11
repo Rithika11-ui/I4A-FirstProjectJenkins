@@ -1,25 +1,36 @@
-version: '3.8'
 services:
   jenkins:
     build:
       context: ./agent
-      dockerfile: dockerfile
+      dockerfile: Dockerfile
     image: jenkins-laravel:latest
     container_name: jenkins
     restart: unless-stopped
     ports:
       - "8086:8080"
       - "50000:50000"
-    environment:
-      - JENKINS_AGENT_SSH_PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCzELxzh4nrTo7A58KNxgXUMIEWcIzyOrHyNhl36WXdDCgAkYYkavyq205isK17oZ+nQvZxTGHAB92LMBYXpEeJISyF934MSsLi+lxQluJicpLrxyeJj2LE+z0SEPJARICpBOailAZFHz9xI7NGaBmOlI0FnaTECd+ZhedbsOBVDec1rmU/r1EY+yED+7ElJqaIvLUn7xHxWQ4/vVqtYoGFH0Rwa1FGrJseOxUt37eAnTyhhaNUeGuau4zITG8CJNHSHyj3ZKLPVdHsg620cz4CF4wn5G9UhSfPkltmXD1juN2CMMHsBBDncnCweZ0UhtY6EYX7gBO/jHFWe6KmwCnwPf4XrBPsewC8Rf0MtS58JijgfItz7QQsWlsW3SWHJ+THTZUc1hX08Taqau4ln+gznOhc4pD+eBR0G9kB7mRSq5tWQcwGwowe5bO+NRsr/DzhQ2PnKZ5CtMxVPJbzKfZHuHUZt7ExlP+BqiZCYrO34RsHtdBVbjjtimOEYeP8MxcxKTGFYnfelfwh8vUOB7pvvpUMo/ajQixbysbtP9KD87/QnEq91aPZZ1sMjShpaP46XhvsH3g3XLye0VhQhndXjNGPoc6OndHAXXOD3JLYNzl6nOaZ5ClkLhyIKujZb30lT2bVFi7zoW1czqmFpQzCxEoLl3wJo7yMAHy8i1GBWQ== msi@DESKTOP-I228BDP
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - jenkins_net
 
+  jenkins-agent:
+    build:
+      context: ./agent
+      dockerfile: Dockerfile.agent
+    container_name: jenkins-agent
+    environment:
+      - JENKINS_AGENT_SSH_PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCzELxzh4nrTo7A58KNxgXUMIEWcIzyOrHyNhl36WXdDCgAkYYkavyq205isK17oZ+nQvZxTGHAB92LMBYXpEeJISyF934MSsLi+lxQluJicpLrxyeJj2LE+z0SEPJARICpBOailAZFHz9xI7NGaBmOlI0FnaTECd+ZhedbsOBVDec1rmU/r1EY+yED+7ElJqaIvLUn7xHxWQ4/vVqtYoGFH0Rwa1FGrJseOxUt37eAnTyhhaNUeGuau4zITG8CJNHSHyj3ZKLPVdHsg620cz4CF4wn5G9UhSfPkltmXD1juN2CMMHsBBDncnCweZ0UhtY6EYX7gBO/jHFWe6KmwCnwPf4XrBPsewC8Rf0MtS58JijgfItz7QQsWlsW3SWHJ+THTZUc1hX08Taqau4ln+gznOhc4pD+eBR0G9kB7mRSq5tWQcwGwowe5bO+NRsr/DzhQ2PnKZ5CtMxVPJbzKfZHuHUZt7ExlP+BqiZCYrO34RsHtdBVbjjtimOEYeP8MxcxKTGFYnfelfwh8vUOB7pvvpUMo/ajQixbysbtP9KD87/QnEq91aPZZ1sMjShpaP46XhvsH3g3XLye0VhQhndXjNGPoc6OndHAXXOD3JLYNzl6nOaZ5ClkLhyIKujZb30lT2bVFi7zoW1czqmFpQzCxEoLl3wJo7yMAHy8i1GBWQ== msi@DESKTOP-I228BDP
+    volumes:
+      - agent_home:/home/jenkins/agent
+    networks:
+      - jenkins_net
+
 volumes:
   jenkins_home:
+    driver: local
+  agent_home:
     driver: local
 
 networks:
