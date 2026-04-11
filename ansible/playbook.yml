@@ -3,7 +3,6 @@
   hosts: production
   become: yes
   vars:
-    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
     deploy_host: "178.128.93.188"
     deploy_user: "root"
     app_dir: "/var/www/html/PHE_Rithika"
