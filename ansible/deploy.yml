@@ -18,7 +18,12 @@
         owner: "{{ deploy_user }}"
         group: www-data
         mode: '0755'
-
+    - name: Fix git directory ownership
+      file:
+        path: "{{ app_dir }}"
+        owner: "{{ deploy_user }}"
+        group: "{{ deploy_user }}"
+        recurse: yes
     - name: Pull latest code from Git
       git:
         repo: "{{ git_repo }}"
