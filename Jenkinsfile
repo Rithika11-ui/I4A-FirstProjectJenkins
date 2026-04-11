@@ -82,20 +82,20 @@ pipeline {
             mail to: 'pherithika@gmail.com',
                 subject: "✅ Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: "Good news! Build #${env.BUILD_NUMBER} was deployed successfully.\n\nURL: ${env.BUILD_URL}"
-            sh """curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
+            sh '''curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
                 -d chat_id=${TELEGRAM_CHAT_ID} \
                 -d parse_mode=HTML \
-                -d text=✅ <b>Build SUCCESS</b>%0AJob: ${env.JOB_NAME}%0ABuild: #${env.BUILD_NUMBER}%0AURL: ${env.BUILD_URL}"""
+                -d "text=✅ Build SUCCESS%0AJob: Laravel-TP03%0ABuild: #${BUILD_NUMBER}%0AURL: ${BUILD_URL}"'''
         }
         failure {
             echo 'Build or deployment FAILED!'
             mail to: 'pherithika@gmail.com',
                 subject: "❌ Build FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: "Build #${env.BUILD_NUMBER} failed.\n\nURL: ${env.BUILD_URL}"
-            sh """curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
+                body: "Build #${env.BUILD_NUMBER} failed.\n\nCheck the logs: ${env.BUILD_URL}"
+            sh '''curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
                 -d chat_id=${TELEGRAM_CHAT_ID} \
                 -d parse_mode=HTML \
-                -d text=❌ <b>Build FAILED</b>%0AJob: ${env.JOB_NAME}%0ABuild: #${env.BUILD_NUMBER}%0AURL: ${env.BUILD_URL}"""
+                -d "text=❌ Build FAILED%0AJob: Laravel-TP03%0ABuild: #${BUILD_NUMBER}%0AURL: ${BUILD_URL}"'''
         }
     }
 }
