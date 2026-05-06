@@ -1,0 +1,132 @@
+pipeline {
+    agent any
+
+    environment {
+        YOUR_NAME   = 'Phe_Rithika'
+        STUDENT_ID  = 'E20220245'
+        DEPLOY_PATH = '/var/www/html/Midterm-2026/phe_rithika'
+        SITE_URL    = 'http://178.128.93.188/Midterm-2026/phe_rithika'
+        EMAIL_TO    = 'your_email@gmail.com'    // ← change this
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo "=========================================="
+                echo "  Student : ${YOUR_NAME}"
+                echo "  ID      : ${STUDENT_ID}"
+                echo "  Build # : ${env.BUILD_NUMBER}"
+                echo "=========================================="
+                checkout scm
+            }
+        }
+
+        stage('Verify Ansible') {
+            steps {
+                sh '''
+                    echo "--- Ansible Version ---"
+                    ansible --version
+                    echo "--- sshpass check ---"
+                    which sshpass
+                '''
+            }
+        }
+
+        stage('Test Server Connection') {
+            steps {
+                sh '''
+                    ansible -i inventory.ini webserver -m ping \
+                        --ssh-common-args='-o StrictHostKeyChecking=no'
+                '''
+            }
+        }
+
+        stage('Deploy with Ansible') {
+            steps {
+                sh '''
+                    ansible-playbook -i inventory.ini deploy.yml \
+                        --ssh-common-args='-o StrictHostKeyChecking=no' \
+                        -v
+                '''
+            }
+        }
+
+        stage('Verify Live URL') {
+            steps {
+                sh '''
+                    HTTP_CODE=$(curl -o /dev/null -sw '%{http_code}' http://178.128.93.188/Midterm-2026/phe_rithika)
+                    echo "HTTP Response: $HTTP_CODE"
+                    if [ "$HTTP_CODE" != "200" ]; then
+                        echo "ERROR: Site returned $HTTP_CODE"
+                        exit 1
+                    fi
+                    echo "Site is LIVE at http://178.128.93.188/Midterm-2026/phe_rithika"
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Build #${env.BUILD_NUMBER} SUCCESS - ${YOUR_NAME}"
+            mail(
+                to: "${EMAIL_TO}",
+                subject: "✅ SUCCESS [${YOUR_NAME}] - Jenkins Build #${env.BUILD_NUMBER}",
+                body: """
+Hi,
+
+Build #${env.BUILD_NUMBER} SUCCEEDED.
+
+==========================================
+  Student Name : ${YOUR_NAME}
+  Student ID   : ${STUDENT_ID}
+  Job          : ${env.JOB_NAME}
+  Build Number : ${env.BUILD_NUMBER}
+  Status       : SUCCESS ✅
+==========================================
+
+🌐 Live Website URL:
+http://178.128.93.188/Midterm-2026/phe_rithika
+
+Jenkins Build URL:
+${env.BUILD_URL}
+
+-- Jenkins CI | ${YOUR_NAME}
+                """.stripIndent()
+            )
+        }
+
+        failure {
+            echo "❌ Build #${env.BUILD_NUMBER} FAILED - ${YOUR_NAME}"
+            mail(
+                to: "${EMAIL_TO}",
+                subject: "❌ FAILURE [${YOUR_NAME}] - Jenkins Build #${env.BUILD_NUMBER}",
+                body: """
+Hi,
+
+Build #${env.BUILD_NUMBER} FAILED.
+
+==========================================
+  Student Name : ${YOUR_NAME}
+  Student ID   : ${STUDENT_ID}
+  Job          : ${env.JOB_NAME}
+  Build Number : ${env.BUILD_NUMBER}
+  Status       : FAILURE ❌
+==========================================
+
+🔍 Check console output for stacktrace:
+${env.BUILD_URL}console
+
+-- Jenkins CI | ${YOUR_NAME}
+                """.stripIndent()
+            )
+        }
+
+        always {
+            echo "=========================================="
+            echo "  Build #${env.BUILD_NUMBER} finished"
+            echo "  Student: ${YOUR_NAME} | ${STUDENT_ID}"
+            echo "=========================================="
+        }
+    }
+}

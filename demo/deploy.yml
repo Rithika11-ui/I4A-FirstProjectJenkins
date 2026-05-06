@@ -1,0 +1,17 @@
+---
+- name: Deploy to Web Server
+  hosts: webserver
+  become: yes
+
+  tasks:
+    - name: Ensure deployment directory exists
+      file:
+        path: /var/www/html/Midterm-2026/phe_rithika
+        state: directory
+        mode: '0755'
+
+    - name: Copy website files
+      copy:
+        src: site/
+        dest: /var/www/html/Midterm-2026/phe_rithika/
+        mode: '0644'
