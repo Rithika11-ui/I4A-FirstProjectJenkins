@@ -42,6 +42,7 @@ test.db
 
 # Submission Files (local use only)
 SUBMISSION.md
+SUBMISSION_TASK3.md
 SUBMISSION.pdf
 images/
 backup.sql
