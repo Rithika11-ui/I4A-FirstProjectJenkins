@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ID Card Preview</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #f3f4f6;
+            padding: 20px;
+        }
+        
+        .card-container {
+            margin: 0 auto;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Card Styles */
+        .id-card {
+            border-radius: 16px;
+            overflow: hidden;
+            background: #ffffff;
+            position: relative;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        /* Layout-specific dimensions */
+        .id-card.vertical {
+            width: 320px;
+            height: 490px;
+        }
+
+        .id-card.horizontal {
+            width: 490px;
+            height: 320px;
+        }
+
+        /* Header Style */
+        .card-header {
+            padding: 15px;
+            text-align: center;
+            color: #ffffff;
+        }
+        .vertical .card-header {
+            width: 100%;
+            height: 110px;
+            border-bottom-left-radius: 50% 15px;
+            border-bottom-right-radius: 50% 15px;
+        }
+        .horizontal .card-header {
+            float: left;
+            width: 40%;
+            height: 100%;
+            padding: 50px 10px;
+            text-align: center;
+        }
+
+        .org-name {
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .tagline {
+            font-size: 10px;
+            opacity: 0.85;
+            margin-top: 4px;
+        }
+
+        /* Badge/Type Style */
+        .profile-badge {
+            font-size: 9px;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            margin-top: 8px;
+            color: #ffffff;
+        }
+        
+        .type-STUDENT {
+            background-color: #2563eb;
+        }
+        .type-EMPLOYEE {
+            background-color: #059669;
+        }
+        .type-USER {
+            background-color: #4b5563;
+        }
+
+        /* Card Body */
+        .card-body {
+            position: relative;
+            padding: 12px;
+        }
+        .vertical .card-body {
+            width: 100%;
+            height: 280px;
+            text-align: center;
+        }
+        .horizontal .card-body {
+            float: left;
+            width: 60%;
+            height: 240px;
+            padding: 20px 10px;
+            text-align: center;
+        }
+
+        /* Photo Styles */
+        .photo-container {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #ffffff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            background: #e5e7eb;
+            display: inline-block;
+        }
+        .vertical .photo-container {
+            margin-top: -55px;
+            margin-bottom: 12px;
+        }
+        .horizontal .photo-container {
+            margin-bottom: 8px;
+        }
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            line-height: 95px; /* Center text vertically */
+            color: #4b5563;
+            font-size: 32px;
+            font-weight: bold;
+            background: #d1d5db;
+            text-align: center;
+            border-radius: 50%;
+        }
+
+        /* Details */
+        .profile-details {
+            width: 100%;
+        }
+        
+        .profile-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .profile-title {
+            font-size: 12px;
+            color: #4b5563;
+            margin-bottom: 8px;
+        }
+
+        .info-grid {
+            margin-top: 8px;
+            font-size: 11px;
+            text-align: left;
+            padding: 0 10px;
+        }
+        .info-row {
+            border-bottom: 1px dashed #e5e7eb;
+            padding: 3px 0;
+            clear: both;
+            height: 20px;
+        }
+        .info-label {
+            float: left;
+            color: #6b7280;
+        }
+        .info-value {
+            float: right;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        /* Footer (Codes) */
+        .card-footer {
+            padding: 10px 15px;
+            border-top: 1px solid #e5e7eb;
+            background: #f9fafb;
+            clear: both;
+        }
+        .vertical .card-footer {
+            width: 100%;
+            height: 100px;
+        }
+        .horizontal .card-footer {
+            width: 60%;
+            height: 80px;
+            float: right;
+            border-top: none;
+            background: transparent;
+            padding: 5px 15px;
+        }
+
+        .barcode-container {
+            float: left;
+            text-align: center;
+        }
+        .barcode-container img {
+            height: 30px;
+            max-width: 130px;
+        }
+        .barcode-text {
+            font-size: 8px;
+            font-family: monospace;
+            margin-top: 1px;
+            color: #4b5563;
+        }
+
+        .qr-container {
+            float: right;
+        }
+        .qr-container img {
+            width: 48px;
+            height: 48px;
+        }
+        
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <!-- Render card. Either 'vertical' or 'horizontal' based on layout -->
+        <div class="id-card" th:classappend="${#strings.toLowerCase(template.layout) == 'horizontal' ? 'horizontal clearfix' : 'vertical'}">
+            
+            <!-- Header -->
+            <div class="card-header th-header" th:style="'background: linear-gradient(135deg, ' + template.primaryColor + ', ' + template.secondaryColor + '); color: ' + template.textColor + ';'">
+                <div class="org-name" th:text="${template.organizationName}">ID CARD SYSTEM</div>
+                <div class="tagline" th:text="${template.tagline}">SECURE VERIFICATION</div>
+                <div class="profile-badge" th:classappend="'type-' + ${profile.type}" th:text="${profile.type}">STUDENT</div>
+            </div>
+
+            <!-- Body -->
+            <div class="card-body">
+                <div class="photo-container">
+                    <img th:if="${photoBase64 != null}" th:src="'data:image/png;base64,' + ${photoBase64}" alt="Photo" />
+                    <div th:if="${photoBase64 == null}" class="photo-placeholder" th:text="${#strings.substring(profile.fullName, 0, 1)}">P</div>
+                </div>
+
+                <div class="profile-details">
+                    <div class="profile-name" th:style="'color: ' + template.primaryColor + ';'" th:text="${profile.fullName}">John Doe</div>
+                    <div class="profile-title" th:text="${profile.title}">Department Staff</div>
+                    
+                    <div class="info-grid">
+                        <div class="info-row">
+                            <span class="info-label">ID No:</span>
+                            <span class="info-value" th:text="${profile.registrationNumber}">2026-STU-001</span>
+                        </div>
+                        <div class="info-row" th:if="${profile.department != null}">
+                            <span class="info-label">Dept:</span>
+                            <span class="info-value" th:text="${profile.department}">Academic</span>
+                        </div>
+                        <div class="info-row" th:if="${profile.bloodGroup != null}">
+                            <span class="info-label">Blood Group:</span>
+                            <span class="info-value" th:text="${profile.bloodGroup}">O+</span>
+                        </div>
+                        <div class="info-row" th:if="${profile.email != null}">
+                            <span class="info-label">Email:</span>
+                            <span class="info-value" th:text="${profile.email}">john.doe@example.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer (QR and Barcode) -->
+            <div class="card-footer clearfix">
+                <div class="barcode-container">
+                    <img th:src="'data:image/png;base64,' + ${barcodeBase64}" alt="Barcode" />
+                    <div class="barcode-text" th:text="${profile.registrationNumber}">2026-STU-001</div>
+                </div>
+                <div class="qr-container">
+                    <img th:src="'data:image/png;base64,' + ${qrCodeBase64}" alt="QR Code" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

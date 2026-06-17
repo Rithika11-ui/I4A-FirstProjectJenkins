@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ID Card Generator - Batch Export</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        /* Navbar Header styles matching profiles.html */
+        header.nav-header {
+            background-color: #0f172a;
+            color: #ffffff;
+            padding: 14px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 30px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-svg {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        nav.menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav.menu a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        nav.menu a:hover, nav.menu a.active {
+            color: #ffffff;
+        }
+
+        /* Content Container */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Page Title */
+        .page-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 25px;
+        }
+
+        /* Card panels */
+        .panel {
+            background-color: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            padding: 24px 30px;
+            margin-bottom: 25px;
+        }
+
+        .panel-header-section {
+            margin-bottom: 20px;
+        }
+
+        .panel-heading-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+
+        .panel-heading-desc {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        /* Group Row Buttons */
+        .group-buttons-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        /* Pill Buttons matching green theme */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 8px 20px;
+            border-radius: 9999px; /* Pill shaped */
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary-solid {
+            background-color: #16a34a;
+            color: #ffffff;
+        }
+
+        .btn-primary-solid:hover {
+            background-color: #15803d;
+        }
+
+        .btn-primary-outline {
+            border-color: #16a34a;
+            color: #16a34a;
+            background-color: transparent;
+        }
+
+        .btn-primary-outline:hover {
+            background-color: #f0fdf4;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            margin-bottom: 25px;
+        }
+
+        th {
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+            color: #334155;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="nav-header">
+        <div class="logo-container">
+            <svg class="logo-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="4" width="18" height="16" rx="3" fill="url(#logo-grad)"/>
+                <circle cx="8" cy="10" r="2.2" fill="#ffffff"/>
+                <path d="M5 16C5 14.5 6.5 13.5 8 13.5C9.5 13.5 11 14.5 11 16" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round"/>
+                <line x1="14" y1="9" x2="18" y2="9" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="14" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="14" y1="15" x2="17" y2="15" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+                <defs>
+                    <linearGradient id="logo-grad" x1="3" y1="4" x2="21" y2="20" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#22c55e"/>
+                        <stop stop-color="#15803d"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <span>ID Card Generator</span>
+        </div>
+        <nav class="menu">
+            <a href="/profiles">Profiles</a>
+            <a href="/profiles/new">New Profile</a>
+            <a href="/templates">Templates</a>
+            <a href="/batch-export" class="active">Batch Export</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Page Title -->
+        <h1 class="page-title">Batch ID Card Export</h1>
+
+        <!-- Panel 1: Quick export by group -->
+        <div class="panel">
+            <div class="panel-header-section">
+                <h2 class="panel-heading-title">Quick export by group</h2>
+                <p class="panel-heading-desc">Generate a single multi-page PDF for an entire group.</p>
+            </div>
+            <div class="group-buttons-row">
+                <button class="btn btn-primary-solid" onclick="exportGroup('ALL')">All profiles</button>
+                <button class="btn btn-primary-outline" onclick="exportGroup('STUDENT')">STUDENT only</button>
+                <button class="btn btn-primary-outline" onclick="exportGroup('EMPLOYEE')">EMPLOYEE only</button>
+                <button class="btn btn-primary-outline" onclick="exportGroup('USER')">USER only</button>
+            </div>
+        </div>
+
+        <!-- Panel 2: Custom selection -->
+        <div class="panel">
+            <div class="panel-header-section">
+                <h2 class="panel-heading-title">Custom selection</h2>
+                <p class="panel-heading-desc">Tick the profiles to include, then export.</p>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">
+                            <input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)" style="width: 16px; height: 16px; accent-color: #16a34a; cursor: pointer;" />
+                        </th>
+                        <th>Reg. No.</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Department</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="p : ${profiles}">
+                        <td>
+                            <input type="checkbox" name="batchProfileId" th:value="${p.id}" th:data-type="${p.type.name()}" style="width: 16px; height: 16px; accent-color: #16a34a; cursor: pointer;" />
+                        </td>
+                        <td th:text="${p.registrationNumber}">2026-MAR-001</td>
+                        <td th:text="${p.fullName}" style="font-weight: 600; color: #0f172a;">David Lim</td>
+                        <td th:text="${p.type.name()}">EMPLOYEE</td>
+                        <td th:text="${p.department != null && !p.department.isEmpty() ? p.department : 'N/A'}">Marketing</td>
+                    </tr>
+                    <tr th:if="${profiles.isEmpty()}">
+                        <td colspan="5" style="text-align: center; color: #64748b; padding: 40px;">No profiles available for batch export. Create profiles first.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button class="btn btn-primary-solid" onclick="exportSelected()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-right:6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export selected PDF
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function toggleSelectAll(master) {
+            const checkboxes = document.querySelectorAll('input[name="batchProfileId"]');
+            checkboxes.forEach(cb => cb.checked = master.checked);
+        }
+
+        async function exportGroup(groupType) {
+            let checkboxes;
+            if (groupType === 'ALL') {
+                checkboxes = document.querySelectorAll('input[name="batchProfileId"]');
+            } else {
+                checkboxes = document.querySelectorAll(`input[name="batchProfileId"][data-type="${groupType}"]`);
+            }
+            
+            if (checkboxes.length === 0) {
+                alert(`No profiles found for group: ${groupType}`);
+                return;
+            }
+            
+            const ids = Array.from(checkboxes).map(cb => parseInt(cb.value));
+            await downloadBatchPdf(ids);
+        }
+
+        async function exportSelected() {
+            const checkedBoxes = document.querySelectorAll('input[name="batchProfileId"]:checked');
+            if (checkedBoxes.length === 0) {
+                alert("Please select at least one profile to export.");
+                return;
+            }
+            const ids = Array.from(checkedBoxes).map(cb => parseInt(cb.value));
+            await downloadBatchPdf(ids);
+        }
+
+        async function downloadBatchPdf(ids) {
+            try {
+                const response = await fetch('/api/profiles/batch/pdf', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(ids)
+                });
+
+                if (!response.ok) throw new Error("Failed to generate combined PDF file");
+
+                // Trigger direct file download
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = "idcards_batch.pdf";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            } catch (err) {
+                alert("Error during batch generation: " + err.message);
+            }
+        }
+    </script>
+
+</body>
+</html>

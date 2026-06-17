@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID Card Manager - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0f172a;
+            --bg-surface: #1e293b;
+            --bg-accent: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #475569;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --font-base: 'Outfit', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-base);
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar navigation */
+        aside {
+            width: 260px;
+            background-color: var(--bg-surface);
+            border-right: 1px solid var(--border);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(to right, #60a5fa, #3b82f6);
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--text-primary);
+            background-color: var(--bg-accent);
+        }
+
+        .nav-item.active {
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Main Workspace */
+        main {
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1400px;
+            overflow-y: auto;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        header {
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        /* Layout Grid */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        /* Glassmorphism Cards */
+        .card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+        }
+
+        .card h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        /* Forms */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full {
+            grid-column: span 2;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        input, select, textarea {
+            background-color: var(--bg-accent);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+        }
+
+        .btn-success:hover {
+            background-color: #059669;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+
+        /* Live Preview Panel */
+        .preview-panel {
+            position: sticky;
+            top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .preview-frame-container {
+            width: 100%;
+            height: 480px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: #e2e8f0;
+            position: relative;
+        }
+
+        .preview-frame-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* List Items Styling */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .item-card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            transition: transform 0.3s;
+        }
+
+        .item-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        .item-name {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .item-info {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .item-actions .btn {
+            flex-grow: 1;
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+
+        /* Selection for Batch operations */
+        .batch-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .batch-selector input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* Color Circle */
+        .color-badge {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1.5px solid #ffffff;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <aside>
+        <div class="logo">ID CARD MANAGER</div>
+        <div class="nav-links">
+            <div class="nav-item active" onclick="switchTab('profiles-tab', this)">Profiles</div>
+            <div class="nav-item" onclick="switchTab('templates-tab', this)">Templates</div>
+            <div class="nav-item" onclick="switchTab('batch-tab', this)">Batch PDF Gen</div>
+        </div>
+    </aside>
+
+    <main>
+        <!-- PROFILES TAB -->
+        <section id="profiles-tab" class="tab-content active">
+            <header>
+                <h1>Profile Management</h1>
+                <p>Add, edit, upload photos, and preview dynamic student & employee identity cards.</p>
+            </header>
+
+            <div class="workspace-grid">
+                <div class="card">
+                    <h2>Create Profile</h2>
+                    <form id="profile-form" onsubmit="submitProfile(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fullName">Full Name *</label>
+                                <input type="text" id="fullName" placeholder="John Doe" required oninput="triggerLivePreview()">
+                            </div>
+                            <div class="form-group">
+                                <label for="type">Profile Type *</label>
+                                <select id="type" required onchange="triggerLivePreview()">
+                                    <option value="STUDENT">Student</option>
+                                    <option value="EMPLOYEE">Employee</option>
+                                    <option value="USER">General User</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="title">Title / Role</label>
+                                <input type="text" id="title" placeholder="e.g. Software Engineer" oninput="triggerLivePreview()">
+                            </div>
+                            <div class="form-group">
+                                <label for="department">Department</label>
+                                <input type="text" id="department" placeholder="e.g. Engineering" oninput="triggerLivePreview()">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" placeholder="john.doe@example.com" oninput="triggerLivePreview()">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="text" id="phone" placeholder="+123456789" oninput="triggerLivePreview()">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bloodGroup">Blood Group</label>
+                                <select id="bloodGroup" onchange="triggerLivePreview()">
+                                    <option value="O+">O+</option>
+                                    <option value="A+">A+</option>
+                                    <option value="B+">B+</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB-">AB-</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileTemplate">ID Card Layout Template Theme *</label>
+                                <select id="profileTemplate" required onchange="triggerLivePreview()">
+                                    <!-- Populated dynamically -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="barcodeType">Barcode Format *</label>
+                                <select id="barcodeType" required onchange="triggerLivePreview()">
+                                    <option value="CODE_128">Code 128 (Alphanumeric)</option>
+                                    <option value="EAN_13">EAN 13 (Numeric Only)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="photoFile">Upload Profile Photo (JPEG / PNG, < 5MB)</label>
+                                <input type="file" id="photoFile" accept="image/jpeg, image/png">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn">Save & Create Profile</button>
+                    </form>
+                </div>
+
+                <div class="preview-panel">
+                    <div class="card">
+                        <h2>Live Preview</h2>
+                        <div class="preview-frame-container">
+                            <iframe id="preview-iframe"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 style="margin-top: 40px; margin-bottom: 20px;">Created Profiles</h2>
+            <div id="profiles-list" class="items-grid">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- TEMPLATES TAB -->
+        <section id="templates-tab" class="tab-content">
+            <header>
+                <h1>Card Templates</h1>
+                <p>Customize brand layouts, hex colors, organization branding, and orientation style (Vertical vs Horizontal).</p>
+            </header>
+
+            <div class="workspace-grid">
+                <div class="card">
+                    <h2>Add Template</h2>
+                    <form id="template-form" onsubmit="submitTemplate(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="templateCode">Template Unique Code *</label>
+                                <input type="text" id="templateCode" placeholder="e.g. BLUE_CORP" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="templateName">Template Name *</label>
+                                <input type="text" id="templateName" placeholder="e.g. Blue Corporate Theme" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="orgName">Organization / Institution Name *</label>
+                                <input type="text" id="orgName" placeholder="e.g. ACME Corp" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="tagline">Header Tagline</label>
+                                <input type="text" id="tagline" placeholder="e.g. Secure Access">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="layout">Card Layout Shape *</label>
+                                <select id="layout" required>
+                                    <option value="VERTICAL">Vertical Card</option>
+                                    <option value="HORIZONTAL">Horizontal Card</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="primaryColor">Primary Brand Color *</label>
+                                <input type="color" id="primaryColor" value="#1d4ed8">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="secondaryColor">Secondary Accent Color *</label>
+                                <input type="color" id="secondaryColor" value="#e0e7ff">
+                            </div>
+                            <div class="form-group">
+                                <label for="textColor">Text Color *</label>
+                                <input type="color" id="textColor" value="#111827">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn">Create Layout Template</button>
+                    </form>
+                </div>
+            </div>
+
+            <h2 style="margin-top: 40px; margin-bottom: 20px;">Available Template Themes</h2>
+            <div id="templates-list" class="items-grid">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- BATCH TAB -->
+        <section id="batch-tab" class="tab-content">
+            <header>
+                <h1>Batch Export ID Cards</h1>
+                <p>Select multiple users and export them side-by-side inside a single PDF file with layout page breaks.</p>
+            </header>
+
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>Select Profiles for Batch Export</h2>
+                    <button class="btn btn-success" onclick="generateBatchPdf()">Download Merged PDF</button>
+                </div>
+
+                <div id="batch-profiles-container">
+                    <!-- Checkbox list of profiles -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let templates = [];
+        let profiles = [];
+
+        // Tab Switching
+        function switchTab(tabId, el) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            el.classList.add('active');
+
+            if (tabId === 'profiles-tab') {
+                loadProfiles();
+                loadTemplates();
+            } else if (tabId === 'templates-tab') {
+                loadTemplates();
+            } else if (tabId === 'batch-tab') {
+                loadBatchProfiles();
+            }
+        }
+
+        // Initialize lists
+        window.addEventListener('DOMContentLoaded', () => {
+            loadTemplates();
+            loadProfiles();
+            setTimeout(triggerLivePreview, 1000); // Initial live preview render
+        });
+
+        // Load Templates
+        async function loadTemplates() {
+            try {
+                const response = await fetch('/api/templates');
+                templates = await response.json();
+                
+                // Populate Profile select options
+                const select = document.getElementById('profileTemplate');
+                select.innerHTML = '';
+                templates.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t.id;
+                    opt.textContent = `${t.name} (${t.layout})`;
+                    select.appendChild(opt);
+                });
+
+                // Render in Template List
+                const list = document.getElementById('templates-list');
+                list.innerHTML = '';
+                templates.forEach(t => {
+                    const card = document.createElement('div');
+                    card.className = 'item-card';
+                    card.innerHTML = `
+                        <div class="item-header">
+                            <span class="item-name">${t.name}</span>
+                            <span class="item-badge" style="background-color: var(--bg-accent); color: white;">${t.layout}</span>
+                        </div>
+                        <div class="item-info">
+                            <div><strong>Code:</strong> ${t.code}</div>
+                            <div><strong>Organization:</strong> ${t.organizationName}</div>
+                            <div><strong>Tagline:</strong> ${t.tagline || 'None'}</div>
+                            <div style="margin-top: 8px;">
+                                <span class="color-badge" style="background: ${t.primaryColor};" title="Primary color"></span>
+                                <span class="color-badge" style="background: ${t.secondaryColor};" title="Secondary color"></span>
+                                <span class="color-badge" style="background: ${t.textColor};" title="Text color"></span>
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-danger" onclick="deleteTemplate(${t.id})">Delete</button>
+                        </div>
+                    `;
+                    list.appendChild(card);
+                });
+            } catch (err) {
+                console.error("Failed to load templates", err);
+            }
+        }
+
+        // Load Profiles
+        async function loadProfiles() {
+            try {
+                const response = await fetch('/api/profiles');
+                profiles = await response.json();
+
+                const list = document.getElementById('profiles-list');
+                list.innerHTML = '';
+                profiles.forEach(p => {
+                    const card = document.createElement('div');
+                    card.className = 'item-card';
+                    
+                    const badgeBg = p.type === 'STUDENT' ? '#3b82f6' : (p.type === 'EMPLOYEE' ? '#10b981' : '#6b7280');
+                    
+                    card.innerHTML = `
+                        <div class="item-header">
+                            <span class="item-name">${p.fullName}</span>
+                            <span class="item-badge" style="background-color: ${badgeBg}; color: white;">${p.type}</span>
+                        </div>
+                        <div class="item-info">
+                            <div><strong>ID No:</strong> ${p.registrationNumber}</div>
+                            <div><strong>Role/Title:</strong> ${p.title || 'N/A'}</div>
+                            <div><strong>Dept:</strong> ${p.department || 'N/A'}</div>
+                            <div><strong>Email:</strong> ${p.email || 'N/A'}</div>
+                            <div><strong>Blood Group:</strong> ${p.bloodGroup || 'N/A'}</div>
+                            <div><strong>Theme:</strong> ${p.template ? p.template.name : 'Default Theme'}</div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn" onclick="previewProfile(${p.id})">View Preview</button>
+                            <button class="btn btn-success" onclick="downloadPdf(${p.id})">PDF</button>
+                            <button class="btn btn-danger" onclick="deleteProfile(${p.id})">Delete</button>
+                        </div>
+                    `;
+                    list.appendChild(card);
+                });
+            } catch (err) {
+                console.error("Failed to load profiles", err);
+            }
+        }
+
+        // Live Preview rendering via GET preview URL
+        function triggerLivePreview() {
+            const fullName = document.getElementById('fullName').value || 'John Doe';
+            const type = document.getElementById('type').value;
+            const title = document.getElementById('title').value || 'Staff';
+            const department = document.getElementById('department').value || 'General';
+            const email = document.getElementById('email').value || 'john.doe@example.com';
+            const phone = document.getElementById('phone').value || '';
+            const bloodGroup = document.getElementById('bloodGroup').value;
+            const barcodeType = document.getElementById('barcodeType').value;
+            
+            const selectedTemplateId = document.getElementById('profileTemplate').value;
+            
+            // Build preview URL mapping parameters dynamically
+            let previewUrl = `/api/profiles/preview?fullName=${encodeURIComponent(fullName)}` +
+                `&type=${encodeURIComponent(type)}` +
+                `&title=${encodeURIComponent(title)}` +
+                `&department=${encodeURIComponent(department)}` +
+                `&email=${encodeURIComponent(email)}` +
+                `&phone=${encodeURIComponent(phone)}` +
+                `&bloodGroup=${encodeURIComponent(bloodGroup)}`;
+            
+            document.getElementById('preview-iframe').src = previewUrl;
+        }
+
+        // Preview Profile by ID inside iframe
+        function previewProfile(id) {
+            document.getElementById('preview-iframe').src = `/api/profiles/${id}/preview`;
+            // Scroll preview into view on mobile
+            document.querySelector('.preview-panel').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Save Profile
+        async function submitProfile(event) {
+            event.preventDefault();
+
+            const selectedTemplateId = document.getElementById('profileTemplate').value;
+            
+            const profileData = {
+                fullName: document.getElementById('fullName').value,
+                type: document.getElementById('type').value,
+                title: document.getElementById('title').value,
+                department: document.getElementById('department').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                bloodGroup: document.getElementById('bloodGroup').value,
+                barcodeType: document.getElementById('barcodeType').value,
+                template: selectedTemplateId ? { id: parseInt(selectedTemplateId) } : null
+            };
+
+            try {
+                // Save profile details
+                const profileRes = await fetch('/api/profiles', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(profileData)
+                });
+                
+                if (!profileRes.ok) throw new Error("Could not create profile");
+                const savedProfile = await profileRes.json();
+
+                // If file is selected, upload the photo
+                const photoInput = document.getElementById('photoFile');
+                if (photoInput.files.length > 0) {
+                    const formData = new FormData();
+                    formData.append('file', photoInput.files[0]);
+                    
+                    const uploadRes = await fetch(`/api/photos/upload/${savedProfile.id}`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (!uploadRes.ok) alert("Photo upload failed, but profile details were saved successfully.");
+                }
+
+                alert("Profile created successfully!");
+                document.getElementById('profile-form').reset();
+                loadProfiles();
+                triggerLivePreview();
+            } catch (err) {
+                alert("Error saving profile: " + err.message);
+            }
+        }
+
+        // Save Template Theme
+        async function submitTemplate(event) {
+            event.preventDefault();
+
+            const templateData = {
+                code: document.getElementById('templateCode').value,
+                name: document.getElementById('templateName').value,
+                organizationName: document.getElementById('orgName').value,
+                tagline: document.getElementById('tagline').value,
+                layout: document.getElementById('layout').value,
+                primaryColor: document.getElementById('primaryColor').value,
+                secondaryColor: document.getElementById('secondaryColor').value,
+                textColor: document.getElementById('textColor').value
+            };
+
+            try {
+                const response = await fetch('/api/templates', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(templateData)
+                });
+
+                if (!response.ok) throw new Error("Could not save template theme");
+                alert("Template layout theme created successfully!");
+                document.getElementById('template-form').reset();
+                loadTemplates();
+            } catch (err) {
+                alert("Error saving template theme: " + err.message);
+            }
+        }
+
+        // Delete Profile
+        async function deleteProfile(id) {
+            if (!confirm("Are you sure you want to delete this profile?")) return;
+            try {
+                const response = await fetch(`/api/profiles/${id}`, { method: 'DELETE' });
+                const result = await response.json();
+                alert(result.message || "Profile deleted successfully");
+                loadProfiles();
+                triggerLivePreview();
+            } catch (err) {
+                alert("Error deleting profile: " + err.message);
+            }
+        }
+
+        // Delete Template Theme
+        async function deleteTemplate(id) {
+            if (!confirm("Are you sure you want to delete this design template?")) return;
+            try {
+                const response = await fetch(`/api/templates/${id}`, { method: 'DELETE' });
+                const result = await response.json();
+                alert(result.message || "Template deleted successfully");
+                loadTemplates();
+            } catch (err) {
+                alert("Error deleting template theme: " + err.message);
+            }
+        }
+
+        // Download Single PDF
+        function downloadPdf(id) {
+            window.open(`/api/profiles/${id}/pdf`, '_blank');
+        }
+
+        // Load Profiles list with checkboxes inside Batch tab
+        async function loadBatchProfiles() {
+            try {
+                const response = await fetch('/api/profiles');
+                profiles = await response.json();
+
+                const container = document.getElementById('batch-profiles-container');
+                container.innerHTML = '';
+                
+                if (profiles.length === 0) {
+                    container.innerHTML = '<div style="color: var(--text-secondary); text-align: center; padding: 20px;">No profiles available. Create profiles first.</div>';
+                    return;
+                }
+
+                profiles.forEach(p => {
+                    const row = document.createElement('div');
+                    row.style.display = 'flex';
+                    row.style.alignItems = 'center';
+                    row.style.padding = '12px 20px';
+                    row.style.borderBottom = '1px solid var(--border)';
+                    
+                    row.innerHTML = `
+                        <div class="batch-selector" style="flex-grow: 1;">
+                            <input type="checkbox" name="batchIdSelect" value="${p.id}" id="chk-${p.id}">
+                            <label for="chk-${p.id}" style="color: var(--text-primary); font-size: 16px; cursor: pointer; margin-left: 10px;">
+                                <strong>${p.fullName}</strong> (${p.registrationNumber}) - <em>${p.type}</em>
+                            </label>
+                        </div>
+                    `;
+                    container.appendChild(row);
+                });
+            } catch (err) {
+                console.error("Failed to load profiles for batch rendering", err);
+            }
+        }
+
+        // Generate Merged Batch PDF
+        async function generateBatchPdf() {
+            const checkedBoxes = document.querySelectorAll('input[name="batchIdSelect"]:checked');
+            if (checkedBoxes.length === 0) {
+                alert("Please select at least one profile to export.");
+                return;
+            }
+
+            const ids = Array.from(checkedBoxes).map(cb => parseInt(cb.value));
+
+            try {
+                const response = await fetch('/api/profiles/batch/pdf', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(ids)
+                });
+
+                if (!response.ok) throw new Error("Could not compile batch PDF");
+
+                // Download the compiled file
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = "idcards_batch.pdf";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            } catch (err) {
+                alert("Error during batch generation: " + err.message);
+            }
+        }
+    </script>
+</body>
+</html>
