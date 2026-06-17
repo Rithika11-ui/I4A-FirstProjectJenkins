@@ -3,6 +3,10 @@
   hosts: web_servers
   gather_facts: no
   tasks:
+    - name: Backup the MySQL database inside the container
+      shell: mysqldump -h db -u root -pHello@123 A-PHE_Rithika-db > /app/backup.sql
+      no_log: true
+
     - name: Copy built JAR into web container
       ansible.builtin.copy:
         src: build/libs/demo-0.0.1-SNAPSHOT.jar
@@ -10,8 +14,6 @@
         mode: '0755'
 
     - name: Restart application by stopping Java (Docker auto-restarts container)
-      shell: pkill -f java || true
-
-    - name: Backup the MySQL database inside the container
-      shell: mysqldump -h db -u root -pHello@123 A-PHE_Rithika-db > /app/backup.sql
-      no_log: true
+      shell: sleep 2 && pkill -f java
+      async: 10
+      poll: 0
