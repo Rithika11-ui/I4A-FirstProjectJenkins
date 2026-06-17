@@ -52,6 +52,12 @@ This shows the `docker-compose.yml` file in the project workspace defining the s
 
 ---
 
+### 7. Nginx Proxy Configuration File
+This shows the `nginx.conf` configuration file in the project workspace directing traffic from proxy port `8443` to the internal Spring Boot port `8080`.
+![Nginx Proxy Configuration File](images/nginx-conf-editor.png)
+
+---
+
 ## Repository Details
 * **Repository URL**: https://github.com/Rithika11-ui/I4A-FirstProjectJenkins.git
 * **Branch**: `finalexam`
