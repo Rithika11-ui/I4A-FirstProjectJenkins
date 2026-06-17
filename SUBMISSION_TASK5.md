@@ -126,6 +126,13 @@ The updated `playbook.yml` is configured to deploy the newly built artifact to t
 
 ---
 
+### 3. GitHub Actions Run Verification
+When you push code to GitHub, the workflow triggers automatically. Once complete, you will see a green checkmark indicating all steps (starting Docker, checking out code, building, testing, and running the Ansible playbook) succeeded:
+
+![GitHub Actions Run Success](images/github-actions-success.png)
+
+---
+
 ## Submission Details
 * **Repository URL**: https://github.com/Rithika11-ui/I4A-FirstProjectJenkins.git
 * **Branch**: `finalexam`
