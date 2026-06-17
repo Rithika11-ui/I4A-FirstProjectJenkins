@@ -19,8 +19,8 @@ pipeline {
                         sh 'chmod +x gradlew'
                         sh './gradlew clean build'
                     } else {
-                        withEnv(["JAVA_HOME=C:\\Program Files\\Java\\jdk-25.0.3", "PATH+GIT=C:\\Program Files\\Git\\bin"]) {
-                            sh './gradlew clean build'
+                        withEnv(["JAVA_HOME=C:\\Program Files\\Java\\jdk-25.0.3"]) {
+                            bat 'gradlew.bat clean build'
                         }
                     }
                 }
@@ -33,9 +33,7 @@ pipeline {
                     if (isUnix()) {
                         sh 'ansible-playbook -i inventory.ini playbook.yml'
                     } else {
-                        withEnv(["PATH+GIT=C:\\Program Files\\Git\\bin"]) {
-                            sh 'wsl ansible-playbook -i inventory.ini playbook.yml'
-                        }
+                        bat 'wsl ansible-playbook -i inventory.ini playbook.yml'
                     }
                 }
             }
