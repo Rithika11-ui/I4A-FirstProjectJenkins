@@ -39,3 +39,8 @@ out/
 # SQLite Databases
 *.db
 test.db
+
+# Submission Files (local use only)
+SUBMISSION.md
+SUBMISSION.pdf
+images/
