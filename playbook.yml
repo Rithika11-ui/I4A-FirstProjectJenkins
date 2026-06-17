@@ -1,15 +1,17 @@
 ---
 - name: Automate Deployment and Database Backup
-  hosts: localhost
-  connection: local
+  hosts: web_servers
   gather_facts: no
   tasks:
     - name: Copy built JAR into web container
-      shell: docker cp /mnt/c/Jenkins-agent/workspace/FinalSpringboot/build/libs/demo-0.0.1-SNAPSHOT.jar web:/app/build/libs/demo-0.0.1-SNAPSHOT.jar
+      ansible.builtin.copy:
+        src: build/libs/demo-0.0.1-SNAPSHOT.jar
+        dest: /app/build/libs/demo-0.0.1-SNAPSHOT.jar
+        mode: '0755'
 
-    - name: Restart web container to apply new JAR
-      shell: docker restart web
+    - name: Restart application by stopping Java (Docker auto-restarts container)
+      shell: pkill -f java || true
 
-    - name: Backup the MySQL database to host
-      shell: docker exec db bash -c "mysqldump -u root -pHello@123 A-PHE_Rithika-db" > D:/DevOps/FinalExam/demo/backup.sql
+    - name: Backup the MySQL database inside the container
+      shell: mysqldump -h db -u root -pHello@123 A-PHE_Rithika-db > /app/backup.sql
       no_log: true
