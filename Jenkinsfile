@@ -33,7 +33,12 @@ pipeline {
                     if (isUnix()) {
                         sh 'ansible-playbook -i inventory.ini playbook.yml'
                     } else {
-                        bat 'wsl ansible-playbook -i inventory.ini playbook.yml'
+                        // Copy the newly built JAR directly into the running web container
+                        bat 'docker cp build\\libs\\demo-0.0.1-SNAPSHOT.jar web:/app/build/libs/demo-0.0.1-SNAPSHOT.jar'
+                        // Restart the container to apply the new JAR
+                        bat 'docker restart web'
+                        // Backup MySQL database to local file
+                        bat 'docker exec db bash -c "mysqldump -u root -pHello@123 A-PHE_Rithika-db" > backup.sql'
                     }
                 }
             }
