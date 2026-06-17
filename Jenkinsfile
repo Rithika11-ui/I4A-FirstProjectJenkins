@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'SpringBoot' }
 
     triggers {
         pollSCM('*/5 * * * *')
