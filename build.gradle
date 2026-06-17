@@ -52,6 +52,8 @@ dependencies {
  
 	// Testing
 	testImplementation 'com.h2database:h2'
+	testImplementation 'org.xerial:sqlite-jdbc:3.45.1.0'
+	testImplementation 'org.hibernate.orm:hibernate-community-dialects:6.4.1.Final'
 }
 
 tasks.named('test') {

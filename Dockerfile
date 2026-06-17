@@ -1,7 +1,7 @@
 FROM eclipse-temurin:25-jdk
 
-# Install NGINX, OpenSSH Server, Git, and curl
-RUN apt-get update && apt-get install -y nginx openssh-server git curl && rm -rf /var/lib/apt/lists/*
+# Install NGINX, OpenSSH Server, Git, curl, and MySQL client
+RUN apt-get update && apt-get install -y nginx openssh-server git curl default-mysql-client && rm -rf /var/lib/apt/lists/*
 
 # Configure SSH
 RUN mkdir -p /var/run/sshd

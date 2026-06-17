@@ -1,0 +1,38 @@
+---
+- name: Automate Deployment, Testing, and Database Backup
+  hosts: web_servers
+  gather_facts: no
+  environment:
+    JAVA_HOME: /opt/java/openjdk
+    PATH: /opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  tasks:
+    - name: Reset local git changes on Web Server
+      shell: git reset --hard && git clean -fd
+      args:
+        chdir: /app
+
+    - name: Pull latest changes from Git repository
+      git:
+        repo: https://github.com/Rithika11-ui/I4A-FirstProjectJenkins.git
+        dest: /app
+        version: finalexam
+        force: yes
+
+    - name: Ensure gradlew has executable permissions
+      shell: chmod +x gradlew
+      args:
+        chdir: /app
+
+    - name: Build Spring Boot application using Gradle
+      shell: ./gradlew bootJar -x test
+      args:
+        chdir: /app
+
+    - name: Run JUnit tests against SQLite database
+      shell: ./gradlew test
+      args:
+        chdir: /app
+
+    - name: Backup the MySQL database to /app/backup.sql
+      shell: mysqldump -h db -u root -pHello@123 A-PHE_Rithika-db > /app/backup.sql
+      no_log: true
