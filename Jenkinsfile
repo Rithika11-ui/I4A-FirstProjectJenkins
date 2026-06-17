@@ -14,16 +14,30 @@ pipeline {
 
         stage('Build & Test') {
             steps {
-                // Compile the project and execute SQLite test suite on the host
-                sh 'chmod +x gradlew'
-                sh './gradlew clean build'
+                script {
+                    if (isUnix()) {
+                        sh 'chmod +x gradlew'
+                        sh './gradlew clean build'
+                    } else {
+                        withEnv(["JAVA_HOME=C:\\Program Files\\Java\\jdk-25.0.3", "PATH+GIT=C:\\Program Files\\Git\\bin"]) {
+                            sh './gradlew clean build'
+                        }
+                    }
+                }
             }
         }
 
         stage('Deploy via Ansible') {
             steps {
-                // Execute the Ansible Playbook to deploy the built JAR to the web container
-                sh 'ansible-playbook -i inventory.ini playbook.yml'
+                script {
+                    if (isUnix()) {
+                        sh 'ansible-playbook -i inventory.ini playbook.yml'
+                    } else {
+                        withEnv(["PATH+GIT=C:\\Program Files\\Git\\bin"]) {
+                            sh 'wsl ansible-playbook -i inventory.ini playbook.yml'
+                        }
+                    }
+                }
             }
         }
     }
